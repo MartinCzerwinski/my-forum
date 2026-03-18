@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Compost Club{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f2eb; color: #2c2c2a; transition: background 0.4s; }
+
+    /* ── Normal mode ── */
+    .header { background: #fff; border-bottom: 1px solid #e0ddd5; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 22px; font-weight: 600; color: #3B6D11; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav a { font-size: 14px; color: #5F5E5A; text-decoration: none; margin-left: 16px; }
+    .nav a:hover { color: #3B6D11; }
+    .insane-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; background: #f5f2eb; color: #2c2c2a; font-size: 13px; cursor: pointer; transition: all 0.3s; }
+    .container { max-width: 820px; margin: 0 auto; padding: 24px 20px; }
+    .hero { margin-bottom: 24px; }
+    .hero h1 { font-size: 24px; font-weight: 600; color: #27500A; margin-bottom: 6px; }
+    .hero p { font-size: 15px; color: #5F5E5A; }
+    .btn-primary { display: inline-block; padding: 10px 20px; background: #3B6D11; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; margin-bottom: 20px; transition: background 0.2s; }
+    .btn-primary:hover { background: #27500A; }
+
+    /* ── Insane mode ── */
+    body.insane { background: #1a3a0a; color: #7fff00; }
+    body.insane .header { background: #2d5a1a; border-bottom: 3px solid #7fff00; animation: headershake 0.5s infinite; }
+    body.insane .logo { color: #7fff00; font-size: 28px; letter-spacing: 3px; animation: rainbow 1s infinite; }
+    body.insane .hero h1 { color: #7fff00; font-size: 36px; letter-spacing: 4px; animation: rainbow 0.8s infinite; }
+    body.insane .hero p { color: #ffff00; font-size: 18px; animation: wiggle 0.3s infinite; }
+    body.insane .insane-btn { background: #ff0066; color: #fff; border: none; animation: btnbounce 0.4s infinite; }
+    body.insane .btn-primary { background: none; border: 2px solid #7fff00; color: #7fff00; animation: slidegradient 1s linear infinite; font-size: 18px; letter-spacing: 2px; }
+    body.insane .nav a { color: #7fff00; }
+
+    /* ── Animations ── */
+    @keyframes rainbow { 0%{color:#ff0} 16%{color:#7fff00} 33%{color:#0ff} 50%{color:#f0f} 66%{color:#ff6600} 83%{color:#ff0066} 100%{color:#ff0} }
+    @keyframes headershake { 0%,100%{transform:none} 25%{transform:rotate(-0.5deg)} 75%{transform:rotate(0.5deg)} }
+    @keyframes wiggle { 0%,100%{transform:none} 33%{transform:translateX(-2px)} 66%{transform:translateX(2px)} }
+    @keyframes btnbounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    @keyframes cardfloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    @keyframes falldown { 0%{top:-10%;opacity:1;transform:rotate(0deg)} 100%{top:110%;opacity:0.3;transform:rotate(360deg)} }
+    @keyframes fly { 0%{left:-5%;transform:scaleX(1)} 49%{left:105%;transform:scaleX(1)} 50%{left:105%;transform:scaleX(-1)} 100%{left:-5%;transform:scaleX(-1)} }
+
+    /* ── Critters ── */
+    .critter { position: fixed; font-size: 28px; pointer-events: none; display: none; z-index: 999; }
+    body.insane .critter { display: block; }
+    .critter.bee { animation: fly 4s linear infinite; }
+    .critter.bee:nth-child(2) { animation-delay: 1.3s; top: 40%; }
+    .critter.bee:nth-child(3) { animation-delay: 2.6s; top: 70%; }
+    .critter.worm { animation: fly 7s linear infinite; top: 90%; font-size: 22px; }
+    .critter.worm:nth-child(5) { animation-delay: 3s; top: 85%; }
+
+    /* ── Falling petals ── */
+    #petal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 998; overflow: hidden; display: none; }
+    body.insane #petal-container { display: block; }
+    .petal { position: absolute; animation: falldown 3s linear infinite; }
+
+    {% block extra_style %}{% endblock %}
+  </style>
+</head>
+<body>
+
+  <!-- Critters -->
+  <div class="critter bee" style="top:20%">🐝</div>
+  <div class="critter bee" style="top:40%">🐝</div>
+  <div class="critter bee" style="top:70%">🦋</div>
+  <div class="critter worm" style="top:90%">🪱</div>
+  <div class="critter worm" style="top:85%">🔬</div>
+  <div id="petal-container"></div>
+
+  <div class="header">
+    <a class="logo" href="{% url 'forum-index' %}">🌱 Compost Club</a>
+    <nav class="nav">
+      <a href="{% url 'forum-index' %}">Forums</a>
+      {% if user.is_authenticated %}
+        <a href="/admin/">Admin</a>
+      {% endif %}
+    </nav>
+    <button class="insane-btn" onclick="toggleInsane()" id="insane-btn">🤪 Insane Mode</button>
+  </div>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script>
+    const petals = ['🌸','🌼','🌻','🌺','🍀','🌷','🪷','🌿','🥕','🪴'];
+
+    function spawnPetals() {
+      const c = document.getElementById('petal-container');
+      c.innerHTML = '';
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.textContent = petals[Math.floor(Math.random() * petals.length)];
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = (Math.random() * 3) + 's';
+        p.style.animationDuration = (2 + Math.random() * 2) + 's';
+        p.style.fontSize = (16 + Math.random() * 20) + 'px';
+        c.appendChild(p);
+      }
+    }
+
+    function toggleInsane() {
+      const on = document.body.classList.toggle('insane');
+      document.getElementById('insane-btn').textContent = on ? '🌱 Normal Mode' : '🤪 Insane Mode';
+      if (on) { spawnPetals(); localStorage.setItem('insane','1'); }
+      else { document.getElementById('petal-container').innerHTML = ''; localStorage.removeItem('insane'); }
+    }
+
+    if (localStorage.getItem('insane')) {
+      document.body.classList.add('insane');
+      document.getElementById('insane-btn').textContent = '🌱 Normal Mode';
+      spawnPetals();
+    }
+  </script>
+
+  {% block extra_script %}{% endblock %}
+</body>
+</html>
