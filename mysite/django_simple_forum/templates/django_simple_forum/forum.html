@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ forum.title }} — Compost Club{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1 id="hero-title">{{ forum.title }}</h1>
+  <p id="hero-sub">{{ forum.description }}</p>
+</div>
+
+<a class="btn-primary" href="{% url 'new-topic' forum.id %}">+ New Topic</a>
+
+<div id="topic-list">
+  {% for topic in topics %}
+  <div class="topic-card">
+    <div class="topic-icon">🌿</div>
+    <div class="topic-info">
+      <a class="topic-name" href="{% url 'topic-detail' topic.id %}">{{ topic.title }}</a>
+      <div class="topic-desc">{{ topic.description }}</div>
+      <div class="topic-meta-bottom">Started by <strong>{{ topic.creator }}</strong></div>
+    </div>
+    <div class="topic-meta">{{ topic.post_set.count }} replies<br>{{ topic.created|date:"M d" }}</div>
+  </div>
+  {% empty %}
+  <p style="font-size:14px; color:#5F5E5A; margin-top: 12px;">No topics yet — be the first to post!</p>
+  {% endfor %}
+</div>
+
+<div style="margin-top: 20px;">
+  <a href="{% url 'forum-index' %}" style="font-size:14px; color:#3B6D11; text-decoration:none;">← Back to all forums</a>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+.topic-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; transition: all 0.2s; }
+.topic-card:hover { border-color: #3B6D11; }
+.topic-icon { font-size: 28px; flex-shrink: 0; }
+.topic-name { font-size: 15px; font-weight: 600; color: #27500A; text-decoration: none; display: block; margin-bottom: 4px; }
+.topic-name:hover { text-decoration: underline; }
+.topic-desc { font-size: 13px; color: #5F5E5A; margin-bottom: 4px; }
+.topic-meta-bottom { font-size: 12px; color: #888; }
+.topic-info { flex: 1; }
+.topic-meta { font-size: 12px; color: #888; text-align: right; flex-shrink: 0; }
+
+body.insane .topic-card { background: #1e4a0a; border: 2px solid #7fff00; animation: cardfloat 2s ease-in-out infinite; }
+body.insane .topic-card:nth-child(2) { animation-delay: 0.3s; }
+body.insane .topic-card:nth-child(3) { animation-delay: 0.6s; }
+body.insane .topic-icon { animation: spin 1.5s linear infinite; display: inline-block; }
+body.insane .topic-name { color: #7fff00; animation: rainbow 1s infinite; }
+body.insane .topic-desc { color: #ffff00; }
+body.insane .topic-meta { color: #ff69b4; }
+body.insane .topic-meta-bottom { color: #aaffaa; }
+{% endblock %}

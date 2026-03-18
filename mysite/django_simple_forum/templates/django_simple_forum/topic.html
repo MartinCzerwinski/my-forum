@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.title }} — Compost Club{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <h1 id="hero-title">{{ topic.title }}</h1>
+  <p id="hero-sub">{{ topic.description }}</p>
+</div>
+
+<a class="btn-primary" href="{% url 'reply' topic.id %}">+ Post a Reply</a>
+
+<div id="post-list">
+  {% for post in posts %}
+  <div class="post-card">
+    <div class="post-avatar">{{ post.creator.username|first|upper }}</div>
+    <div class="post-body">
+      <div class="post-header">
+        <strong class="post-author">{{ post.creator }}</strong>
+        <span class="post-date">{{ post.created|date:"M d, Y" }}</span>
+      </div>
+      <div class="post-title">{{ post.title }}</div>
+      <div class="post-text">{{ post.body }}</div>
+    </div>
+  </div>
+  {% empty %}
+  <p style="font-size:14px; color:#5F5E5A; margin-top:12px;">No replies yet — start the conversation!</p>
+  {% endfor %}
+</div>
+
+<div style="margin-top: 20px;">
+  <a href="{% url 'forum-detail' topic.forum.id %}" style="font-size:14px; color:#3B6D11; text-decoration:none;">← Back to {{ topic.forum.title }}</a>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+.post-card { background: #fff; border: 1px solid #e0ddd5; border-radius: 12px; padding: 16px; display: flex; gap: 14px; margin-bottom: 12px; transition: all 0.2s; }
+.post-avatar { width: 42px; height: 42px; border-radius: 50%; background: #c0dd97; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: #27500A; flex-shrink: 0; }
+.post-body { flex: 1; }
+.post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.post-author { font-size: 14px; color: #27500A; }
+.post-date { font-size: 12px; color: #888; }
+.post-title { font-size: 15px; font-weight: 600; color: #2c2c2a; margin-bottom: 6px; }
+.post-text { font-size: 14px; color: #444; line-height: 1.6; }
+
+body.insane .post-card { background: #1e4a0a; border: 2px solid #7fff00; animation: cardfloat 2s ease-in-out infinite; }
+body.insane .post-card:nth-child(2) { animation-delay: 0.3s; }
+body.insane .post-card:nth-child(3) { animation-delay: 0.6s; }
+body.insane .post-avatar { background: #ff0066; color: #fff; animation: spin 2s linear infinite; }
+body.insane .post-author { color: #7fff00; animation: rainbow 1s infinite; }
+body.insane .post-date { color: #ff69b4; }
+body.insane .post-title { color: #ffff00; }
+body.insane .post-text { color: #aaffaa; }
+{% endblock %}
