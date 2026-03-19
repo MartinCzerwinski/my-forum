@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'mysite'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m8h9tk@k_m=o%5d3^a-=v*6!!0z*2cgsiy*%eaj2jbw*p#8pc#'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
