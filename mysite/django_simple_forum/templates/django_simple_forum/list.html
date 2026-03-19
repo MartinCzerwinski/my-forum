@@ -47,5 +47,7 @@ body.insane .forum-meta { color: #ff69b4; }
 {% endblock %}
 
 {% block extra_script %}
-document.getElementById('hero-title') && document.body.classList.contains('insane') && (document.getElementById('hero-title').textContent = '🌱🌻 COMPOST CLUB IS ALIVE!! 🌻🌱');
+<script>
+  document.getElementById('hero-title') && document.body.classList.contains('insane') && (document.getElementById('hero-title').textContent = '🌱🌻 COMPOST CLUB IS ALIVE!! 🌻🌱');
+</script>
 {% endblock %}
